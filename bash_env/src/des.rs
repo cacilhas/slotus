@@ -118,7 +118,6 @@ fn stringify_token<'a>(pair: Pair<'a, Rule>) -> eyre::Result<&'a str> {
 mod tests {
     use super::*;
 
-    // let _ = parse("RES=([test]=(abc def \"ghi jkl\" aj\\ 9 12 1.0))".to_string());
     #[test]
     fn it_should_parse_simple_string() {
         let expected: JsonValue = "some_test123".into();

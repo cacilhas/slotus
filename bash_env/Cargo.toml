@@ -8,3 +8,6 @@ eyre = "0.6"
 json = "0.12"
 pest = "2.7"
 pest_derive = "2.7"
+
+[dependencies.str_macro]
+path = "../str_macro"

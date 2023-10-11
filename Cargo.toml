@@ -4,6 +4,7 @@ resolver = "1"
 
 members = [
   "bash_env",
+  "str_macro",
 ]
 
 [profile.release]
