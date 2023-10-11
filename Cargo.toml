@@ -1,8 +1,15 @@
-[package]
-name = "slotus-super"
-version = "0.1.0"
-edition = "2021"
+[workspace]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+resolver = "1"
 
-[dependencies]
+members = [
+  "bash_env",
+]
+
+[profile.release]
+opt-level     = "s"
+codegen-units = 1
+debug = false
+lto   = true
+rpath = false
+strip = true

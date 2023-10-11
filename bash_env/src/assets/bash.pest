@@ -1,0 +1,57 @@
+no_nl = { !NEWLINE ~ ANY }
+end_st = { (NEWLINE | EOI) }
+COMMENT = _{ "#" ~ no_nl* ~ end_st }
+WHITESPACE = _{ " " | "\t" }
+
+backslash = _{ "\\" }
+alpha = { 'A'..'Z' | 'a'..'z' | "_" }
+alphanum = { '0'..'9' | alpha }
+str_space = @{ backslash ~ " " }
+separator = @{ WHITESPACE | NEWLINE }
+quote = _{ "'" }
+no_quote = @{ !"'" ~ ANY }
+str_quote = @{ backslash ~ "'" }
+dbl_quote = _{ "\"" }
+no_dbl_quote = @{ !"\"" ~ ANY }
+str_dbl_quote = @{ backslash ~ "\"" }
+open_paren = _{ "(" }
+close_paren = _{ ")" }
+open_pair_id = _{ "[" }
+close_pair_id = _{ "]=" }
+attrib_sig = _{ "=" }
+
+id = { alpha+ ~ alphanum* }
+number = @{ ("+" | "-")?
+          ~ ASCII_DIGIT+
+          ~ ("." ~ ASCII_DIGIT+)?
+          | "0x" ~ ASCII_HEX_DIGIT+
+          }
+string = { (alphanum | str_space | str_dbl_quote | str_quote)+
+         | dbl_quote ~ (no_dbl_quote | str_dbl_quote)* ~ dbl_quote
+         | quote ~ (no_quote | str_quote)* ~ quote
+         }
+pair = ${ open_pair_id
+        ~ id
+        ~ close_pair_id
+        ~ value?
+        }
+array = { open_paren
+        ~ ( value
+          ~ (separator ~ value)*
+          )?
+        ~ close_paren
+        }
+hash = { open_paren
+       ~ pair
+       ~ (separator ~ pair)*
+       ~ close_paren
+       }
+
+attrib = ${ id ~ attrib_sig ~ value }
+
+value = ${ array | hash | number | string }
+
+main = { SOI
+       ~ (attrib+ | value)
+       ~ EOI
+       }
